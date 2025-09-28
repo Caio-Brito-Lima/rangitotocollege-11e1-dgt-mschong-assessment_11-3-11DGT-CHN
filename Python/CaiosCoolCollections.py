@@ -4,14 +4,16 @@ m = Tk()
 import random
 import time
 
-global title, Game1, Game2, Game3
+global title, Game1, Game2, Game3, chosen_game
 title = "Caio's Cool Collections"
 m.title(title)
-Game1 = "General Knowledge Quiz"
+Game1 = "Quiz"
 Game2 = "Wordle"
 Game3 = "Hangman"
+chosen_game = ""
 
 #Setting window size
+global width, height
 width = 1080
 height = 720
 m.geometry("{}x{}".format(width, height))
@@ -69,6 +71,40 @@ def HM_tutorial():
     ok_button = Button(tutorial_window, text="OK", width=round(button_width/4), command=tutorial_window.destroy)
     ok_button.pack(pady=10)
 
+#Scores Function
+def Scores():
+    scores_window = Toplevel(m)
+    scores_window.title("Scores")
+    scores_label = Label(scores_window, text="Scores", font=("Arial", 16, "bold"))
+    scores_label.pack(pady=10)
+    global player_name
+    scores_desc = Label(scores_window, text="Welcome to Scores, {}! Here, you'll be able to see all the scores\n"
+    "you've gotten throughout the three games available!".format(player_name), font=("Arial", 12), justify=LEFT)
+    
+    global Game1, Game2, Game3, GK_score, w_score
+    #Checking scores
+    if 'GK_score' in globals():
+        if GK_score == 10:
+            colour = "green"
+        else:
+            colour = "black"
+    else:
+        GK_score = 0
+        colour = "black"
+    if 'w_score' not in globals():
+        w_score = "0"
+    
+    scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12), fg=colour, justify=CENTER)
+    scores_text2 = Label(scores_window, text="{}: Solved in {} attempts".format(Game2, w_score), font=("Arial", 12), justify=CENTER)
+    scores_text3 = Label(scores_window, text="{}: No scores yet!".format(Game3), font=("Arial", 12), justify=CENTER)
+    ok_button = Button(scores_window, text="OK", width=round(button_width/4), command=scores_window.destroy)
+    
+    #Layout
+    scores_desc.pack(padx=20, pady=20)
+    scores_text1.pack(pady=10)
+    scores_text2.pack(pady=10)
+    scores_text3.pack(pady=10)
+    ok_button.pack(pady=10)
 #Game Functions
 def GK_game():
     menu_frame.destroy()
@@ -105,7 +141,8 @@ def GK_game():
     for question in questions:
         answers.append(q_a[question])
 
-    global GK_frame
+    global GK_frame, chosen_game
+    chosen_game = "Quiz"
     GK_frame = Frame(m)
     GK_frame.pack(pady=50)
 
@@ -128,7 +165,6 @@ def GK_game():
                 error_mes.grid(row=4, column=0, columnspan=3)
                 answer_entry.delete(0, END)
             i += 1
-            print(i+1)
             # Show next question
             if i < 10:
                 chosen_question = questions[i]
@@ -182,10 +218,145 @@ def GK_game():
     answer_entry.grid(row=3, column=1, padx=10, sticky=W+E)
     answer_button.grid(row=3, column=2, sticky=W)
     error_mes.grid(row=4, column=0, columnspan=3)
+
+def W_Game():
+    menu_frame.destroy()
+
+    #Resizing window
+    global width, height
+    m.geometry("{}x{}".format(width, round(height*1.2)))
+
+    global w_frame, chosen_game, w_score, w_desc, num
+    w_score = 0
+    num = 0
+    chosen_game = "Wordle"
+    w_frame = Frame(m)
+    w_frame.pack(pady=50)
+    
+    w_label = Label(w_frame, text="Wordle", font=("Arial", 30, "bold"))
+    w_desc = Label(w_frame, text="Guess the 5-letter word:", font=("Arial", 16))
     
 
+    #words list (45 5-letter words)
+    words = ["blade", "crane", "flint", "grape", "house", "jumpy", "knock", "light", "mango", "night", 
+    "ocean", "plant", "queen", "river", "stone", "table", "under", "vivid", "whale", "zesty", "pinky", 
+    "cloud", "brave", "charm", "dwarf", "eagle", "frost", "glove", "honey", "ivory", "jewel", "lunar",
+    "magic", "noble", "orbit", "pearl", "quest", "royal", "sugar", "tiger", "urban", "vapor", "waltz"
+    "crash", "drink"]
+
+    #Function for what happens when you submit a word
+    def w_submit():
+        global w_entry, error_mes, attempts, attempts_label, w_desc, answer_button, num
+        sub_word = w_entry.get()
+        if len(sub_word) != 5:
+            error_mes.destroy()
+            error_mes = Label(w_frame, text="Please enter a 5-letter word.", font=("Arial", 12), fg="red")
+            error_mes.grid(row=3, column=0, columnspan=2)
+        elif not sub_word.isalpha():
+            error_mes.destroy()
+            error_mes = Label(w_frame, text="Please enter only letters.", font=("Arial", 12), fg="red")
+            error_mes.grid(row=3, column=0, columnspan=2)
+        else:
+            sub_word = sub_word.lower()
+            if sub_word == chosen_word:
+                attempts -= 1
+                error_mes.destroy()
+                w_desc.destroy()
+                answer_button.destroy()
+                w_entry.destroy()
+                error_mes = Label(w_frame, text="Congratulations! You've guessed the word!", font=("Arial", 16, "bold"), fg="green")
+                error_mes.grid(row=3, column=0, columnspan=2)
+                attempts_label.destroy()
+                global w_score
+                w_score = start_attempts - attempts
+                if w_score == 1:
+                    att_txt = "attempt"
+                else:
+                    att_txt = "attempts"
+                score_label = Label(w_frame, text="You found the word in {} {}!".format(w_score, att_txt), font=("Arial", 16, "bold"))
+                score_label.grid(row=4, column=0, columnspan=3, pady=20)
+            elif attempts > 1:
+                attempts -= 1
+                attempts_label.destroy()
+                attempts_label = Label(w_frame, text="Attemps: {}".format(attempts), font=("Arial", 12))
+                attempts_label.grid(row=4, column=0, columnspan=3, pady=10)
+                w_entry.delete(0, END)
+            else:
+                error_mes.destroy()
+                error_mes = Label(w_frame, text=f"Game Over! The word was '{chosen_word}'.", font=("Arial", 16, "bold"))
+                error_mes.grid(row=3, column=0, columnspan=2, pady=10)
+                w_desc.destroy()
+                w_entry.destroy()
+                answer_button.destroy()
+                attempts_label.destroy()
+            
+            #Displaying the guessed word with colours
+            sub_word = sub_word.upper()
+            display_word = []
+            for i in range(5):
+                if sub_word[i].lower() == chosen_word[i]:
+                    display_word.append("green")
+                elif sub_word[i].lower() in chosen_word:
+                    for letter in sub_word:
+                        if sub_word.count(letter) > chosen_word.count(letter):
+                            if letter == sub_word[i]:
+                                display_word.append("grey")
+                                break
+                            else:
+                                display_word.append("orange")
+                                break
+                else:
+                    display_word.append("grey")
+            for i in range(5):
+                letter_label = Label(word_frame, text=sub_word[i], font=("Arial", 20), width=4, height=2, bg=display_word[i], fg="white")
+                letter_label.grid(row=num, column=i, padx=5, pady=5)
+            num += 1
+            print(num)
+
+    chosen_word = random.choice(words)
+    print(chosen_word) #For testing purposes, to be removed later
+    global w_entry, answer_button, error_mes, attempts, attempts_label
+    start_attempts = 6 # Number of attempts
+    attempts = 6
+    w_entry = Entry(w_frame, font=("Arial", 16))
+    answer_button = Button(w_frame, text="Submit", font=("Arial", 12), command=w_submit)
+    error_mes = Label(w_frame, text="", font=("Arial", 12), fg="red")
+    attempts_label = Label(w_frame, text="Attemps: {}".format(attempts), font=("Arial", 12))
+    
+    #Layout
+    w_label.grid(row=0, column=0, columnspan=2, sticky=W+E, pady=15)
+    w_desc.grid(row=1, column=0, columnspan=2, sticky=W+E)    
+    w_entry.grid(row=2, column=0, pady=10)
+    answer_button.grid(row=2, column=1, pady=10, padx=10, sticky=W)
+    error_mes.grid(row=3, column=0, columnspan=2)
+    attempts_label.grid(row=4, column=0, columnspan=2, pady=10)
+
+    word_frame = Frame(w_frame)
+    word_frame.grid(row=5, column=0, columnspan=2, pady=20)
+
+
+    global menu_exit
+    menu_exit.config(text="Exit to Menu", command=exit_to_menu)
+
+def HM_Game():
+    menu_frame.destroy()
+    global chosen_game, hm_frame
+    chosen_game = "Hangman"
+    hm_frame = Frame(m)
+    hm_frame.pack(pady=50)
+    hm_score = 0
+    
+    global menu_exit
+    menu_exit.config(text="Exit to Menu", command=exit_to_menu)
+
 def exit_to_menu():
-    GK_frame.destroy()
+    global chosen_game
+    if chosen_game == "Quiz":
+        GK_frame.destroy()
+    elif chosen_game == "Wordle":
+        w_frame.destroy()
+    elif chosen_game == "Hangman":
+        hm_frame.destroy()
     menu_exit.destroy()
     open_menu()
 
@@ -204,9 +375,12 @@ def open_menu():
     tutorial_menu()
         
     frame.destroy()
-    global menu_frame
+    global menu_frame, Game1, Game2, Game3, player_name
     menu_frame = Frame(m)
     menu_frame.pack(pady=20)
+
+    global width, height
+    m.geometry("{}x{}".format(width, height))
 
     #Program Title
     if "Caio" in player_name.title():
@@ -221,10 +395,10 @@ def open_menu():
     label = Label(menu_frame, text="Caio's Cool Collections", font=("Arial", 35))
 
     #Menu Buttons
-    menu_button1 = Button(menu_frame, text="Game 1", width=button_width, height=button_height, command=GK_game)
-    menu_button2 = Button(menu_frame, text="Game 2", width=button_width, height=button_height)
-    menu_button3 = Button(menu_frame, text="Game 3", width=button_width, height=button_height)
-    scores_button = Button(menu_frame, text="Scores", width=button_width, height=button_height)
+    menu_button1 = Button(menu_frame, text=Game1, width=button_width, height=button_height, command=GK_game)
+    menu_button2 = Button(menu_frame, text=Game2, width=button_width, height=button_height, command=W_Game)
+    menu_button3 = Button(menu_frame, text=Game3, width=button_width, height=button_height, command=HM_Game)
+    scores_button = Button(menu_frame, text="Scores", width=button_width, height=round(button_height/1.5), command=Scores)
     global menu_exit
     menu_exit = Button(m, text="Exit Program", command=m.quit, width=button_width, height=round(button_height/2))
 
@@ -234,7 +408,7 @@ def open_menu():
     menu_button1.grid(row=2, column=0, pady=30)
     menu_button2.grid(row=2, column=1, padx=40)
     menu_button3.grid(row=2, column=2)
-    scores_button.grid(row=3, column=0, columnspan=3, pady=30)
+    scores_button.grid(row=3, column=0, columnspan=3, pady=30, sticky=W+E)
     menu_exit.pack(fill=BOTH, side=BOTTOM, pady=20, padx=button_width*5)
 
 
