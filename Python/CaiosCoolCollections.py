@@ -85,17 +85,25 @@ def Scores():
     #Checking scores
     if 'GK_score' in globals():
         if GK_score == 10:
-            colour = "green"
+            gk_colour = "green"
         else:
-            colour = "black"
+            gk_colour = "black"
     else:
         GK_score = 0
-        colour = "black"
+        gk_colour = "black"
     if 'w_score' not in globals():
-        w_score = "0"
+        w_score = "no"
+        att_txt = "attempts"
+        w_colour = "black"
+    else:
+        w_colour = "green"
+        if w_score == 1:
+            att_txt = "attempt"
+        else:
+            att_txt = "attempts"
     
-    scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12), fg=colour, justify=CENTER)
-    scores_text2 = Label(scores_window, text="{}: Solved in {} attempts".format(Game2, w_score), font=("Arial", 12), justify=CENTER)
+    scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12), fg=gk_colour, justify=CENTER)
+    scores_text2 = Label(scores_window, text="{}: Solved in {} {}".format(Game2, w_score, att_txt), font=("Arial", 12), fg=w_colour, justify=CENTER)
     scores_text3 = Label(scores_window, text="{}: No scores yet!".format(Game3), font=("Arial", 12), justify=CENTER)
     ok_button = Button(scores_window, text="OK", width=round(button_width/4), command=scores_window.destroy)
     
@@ -231,7 +239,7 @@ def W_Game():
     num = 0
     chosen_game = "Wordle"
     w_frame = Frame(m)
-    w_frame.pack(pady=50)
+    w_frame.pack(pady=35)
     
     w_label = Label(w_frame, text="Wordle", font=("Arial", 30, "bold"))
     w_desc = Label(w_frame, text="Guess the 5-letter word:", font=("Arial", 16))
@@ -273,7 +281,11 @@ def W_Game():
                     att_txt = "attempt"
                 else:
                     att_txt = "attempts"
-                score_label = Label(w_frame, text="You found the word in {} {}!".format(w_score, att_txt), font=("Arial", 16, "bold"))
+                if w_score == 6:
+                    extra_text = "Phew!"
+                else:
+                    extra_text = "Great job!"
+                score_label = Label(w_frame, text="You found the word in {} {}!\n{}".format(w_score, att_txt, extra_text), font=("Arial", 16, "bold"))
                 score_label.grid(row=4, column=0, columnspan=3, pady=20)
             elif attempts > 1:
                 attempts -= 1
@@ -290,28 +302,37 @@ def W_Game():
                 answer_button.destroy()
                 attempts_label.destroy()
             
-            #Displaying the guessed word with colours
-            sub_word = sub_word.upper()
-            display_word = []
+            #Displaying the guessed letters with colours
+            display_col = []
+            no_doubles = False
             for i in range(5):
-                if sub_word[i].lower() == chosen_word[i]:
-                    display_word.append("green")
-                elif sub_word[i].lower() in chosen_word:
-                    for letter in sub_word:
-                        if sub_word.count(letter) > chosen_word.count(letter):
-                            if letter == sub_word[i]:
-                                display_word.append("grey")
-                                break
+                letter = sub_word[i]
+                correct_letter = chosen_word[i]
+                if letter == correct_letter:
+                    display_col.append("green")
+                elif letter in chosen_word:
+                    if sub_word.count(letter) > chosen_word.count(letter):
+                        if letter != correct_letter:
+                            if no_doubles == False:
+                                display_col.append("orange")
+                                no_doubles = True
                             else:
-                                display_word.append("orange")
-                                break
+                                display_col.append("grey")
+                        else:
+                            display_col.append("orange")
+                    else:
+                        display_col.append("orange")
                 else:
-                    display_word.append("grey")
-            for i in range(5):
-                letter_label = Label(word_frame, text=sub_word[i], font=("Arial", 20), width=4, height=2, bg=display_word[i], fg="white")
-                letter_label.grid(row=num, column=i, padx=5, pady=5)
+                    display_col.append("grey")
+
+            def show_letters_with_delay(sub_word, display_col, word_frame, num, i=0):
+                if i < 5:
+                    letter_label = Label(word_frame, text=sub_word[i].upper(), font=("Arial", 20), width=4, height=2, bg=display_col[i], fg="white")
+                    letter_label.grid(row=num, column=i, padx=2, pady=2)
+                    w_frame.after(100, lambda: show_letters_with_delay(sub_word, display_col, word_frame, num, i+1))
+
+            show_letters_with_delay(sub_word, display_col, word_frame, num)
             num += 1
-            print(num)
 
     chosen_word = random.choice(words)
     print(chosen_word) #For testing purposes, to be removed later
@@ -324,7 +345,7 @@ def W_Game():
     attempts_label = Label(w_frame, text="Attemps: {}".format(attempts), font=("Arial", 12))
     
     #Layout
-    w_label.grid(row=0, column=0, columnspan=2, sticky=W+E, pady=15)
+    w_label.grid(row=0, column=0, columnspan=2, sticky=W+E, pady=20)
     w_desc.grid(row=1, column=0, columnspan=2, sticky=W+E)    
     w_entry.grid(row=2, column=0, pady=10)
     answer_button.grid(row=2, column=1, pady=10, padx=10, sticky=W)
@@ -332,8 +353,11 @@ def W_Game():
     attempts_label.grid(row=4, column=0, columnspan=2, pady=10)
 
     word_frame = Frame(w_frame)
-    word_frame.grid(row=5, column=0, columnspan=2, pady=20)
-
+    word_frame.grid(row=5, column=0, columnspan=2)
+    for i in range(6):
+        for j in range(5):
+            letter_label = Label(word_frame, text="", font=("Arial", 20), width=4, height=2, bg="#3B3B3B")
+            letter_label.grid(row=i, column=j, padx=2, pady=2)
 
     global menu_exit
     menu_exit.config(text="Exit to Menu", command=exit_to_menu)
@@ -409,7 +433,7 @@ def open_menu():
     menu_button2.grid(row=2, column=1, padx=40)
     menu_button3.grid(row=2, column=2)
     scores_button.grid(row=3, column=0, columnspan=3, pady=30, sticky=W+E)
-    menu_exit.pack(fill=BOTH, side=BOTTOM, pady=20, padx=button_width*5)
+    menu_exit.pack(fill=Y, side=BOTTOM, pady=20, padx=button_width*5)
 
 
 #Menu function
