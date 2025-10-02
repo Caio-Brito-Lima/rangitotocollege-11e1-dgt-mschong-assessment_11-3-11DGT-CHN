@@ -119,22 +119,27 @@ def GK_game():
 
     q_a = {
         "What is the closest planet to the sun?": "Mercury",
-        "Who came up with the term 'debugbing'?": "Grace Hopper",
+        "Who came up with the term 'debugbing'?": ["Grace Hopper", "Grace"],
+        "What is the capital of New Zealand?": "Wellington",
         "What program was ChatGPT created on?": "Python",
         "What is the meaning of life, the universe and everything?": "42",
         "What does the acronym 'www' stand for?": "World Wide Web",
         "What is the name of the first 3D platforming video game?": "Super Mario 64",
         "What is the function to output text in Python?": "print",
         "Who is the most sassy teacher?": "Miss Chong",
-        "What is the slang name for New York City?": "The Big Apple",
-        "What is a group of owls called?": "A parliament",
+        "What is the slang name for New York City?": ["The Big Apple", "Big Apple"],
+        "What is a group of owls called?": ["A parliament"],
         "What is the symbol for iron on the periodic table?": "Fe",
         "What continent is the only one with land in all four hemispheres?": "Africa",
         "What is the hardest natural substance on Earth?": "Diamond",
         "What year was the official Minecraft release?": "2011",
         "What is the grass type pokemon starter from the third generation?": "Treecko",
         "What is the fire type pokemon starter from the third generation?": "Torchic",
-        "What is the water type pokemon starter from the third generation?": "Mudkip"
+        "What is the water type pokemon starter from the third generation?": "Mudkip",
+        "What is the name of the tallest mountain in Japan?": "Mount Fuji",
+        "What do you have to eat to keep the doctor away?": "An apple",
+        "What is the name of the fairy in Peter Pan?": "Tinker Bell",
+        "What is the name of the main character's partner in Breaking Bad?": ["Jesse Pinkman", "Jesse"],
     }
 
     #Collecting 10 random questions and their answers
@@ -148,6 +153,7 @@ def GK_game():
     answers = []
     for question in questions:
         answers.append(q_a[question])
+    print(answers) #For testing purposes, to be removed later
 
     global GK_frame, chosen_game
     chosen_game = "Quiz"
@@ -160,18 +166,34 @@ def GK_game():
     def GK_submit():
         global answer_entry, error_mes, i, GK_score
         sub_answer = answer_entry.get()
+
         if len(sub_answer) > 0:
-            if sub_answer.lower() == answers[i].lower():
+            if isinstance(answers[i], list): # For questions with multiple possible answers
+                correct = False
+                for ans in answers[i]:
+                    if sub_answer.lower() in ans.lower():
+                        correct = True
+                        break
+            else:
+                if sub_answer.lower() == answers[i].lower():
+                    correct = True
+                else:
+                    correct = False
+            if correct:
                 error_mes.destroy()
                 error_mes = Label(GK_frame, text="Correct!  +1 point", font=("Arial", 16, "bold"), fg="green")
                 error_mes.grid(row=4, column=0, columnspan=3)
                 answer_entry.delete(0, END)
                 GK_score += 1
+                if i < 9:
+                    GK_frame.after(1000, lambda: error_mes.config(text=""))
             else:
                 error_mes.destroy()
                 error_mes = Label(GK_frame, text="Incorrect!", font=("Arial", 16, "bold"), fg="red")
                 error_mes.grid(row=4, column=0, columnspan=3)
                 answer_entry.delete(0, END)
+                if i < 9:
+                    GK_frame.after(1000, lambda: error_mes.config(text=""))
             i += 1
             # Show next question
             if i < 10:
@@ -215,6 +237,11 @@ def GK_game():
     answer_button = Button(GK_frame, text="Submit", font=("Arial", 12), command=GK_submit)
     error_mes = Label(GK_frame, text="", font=("Arial", 12), fg="red")
 
+    def on_enter_key(event):
+        GK_submit()
+
+    answer_entry.bind('<Return>', on_enter_key)
+
     global menu_exit
     menu_exit.config(text="Exit to Menu", command=exit_to_menu)
 
@@ -249,7 +276,7 @@ def W_Game():
     words = ["blade", "crane", "flint", "grape", "house", "jumpy", "knock", "light", "mango", "night", 
     "ocean", "plant", "queen", "river", "stone", "table", "under", "vivid", "whale", "zesty", "pinky", 
     "cloud", "brave", "charm", "dwarf", "eagle", "frost", "glove", "honey", "ivory", "jewel", "lunar",
-    "magic", "noble", "orbit", "pearl", "quest", "royal", "sugar", "tiger", "urban", "vapor", "waltz"
+    "magic", "noble", "orbit", "pearl", "quest", "royal", "sugar", "tiger", "urban", "vapor", "waltz",
     "crash", "drink"]
 
     #Function for what happens when you submit a word
@@ -260,10 +287,12 @@ def W_Game():
             error_mes.destroy()
             error_mes = Label(w_frame, text="Please enter a 5-letter word.", font=("Arial", 12), fg="red")
             error_mes.grid(row=3, column=0, columnspan=2)
+            w_frame.after(2000, lambda: error_mes.config(text=""))
         elif not sub_word.isalpha():
             error_mes.destroy()
             error_mes = Label(w_frame, text="Please enter only letters.", font=("Arial", 12), fg="red")
             error_mes.grid(row=3, column=0, columnspan=2)
+            w_frame.after(2000, lambda: error_mes.config(text=""))
         else:
             sub_word = sub_word.lower()
             if sub_word == chosen_word:
@@ -304,7 +333,6 @@ def W_Game():
             
             #Displaying the guessed letters with colours
             display_col = []
-            no_doubles = False
             for i in range(5):
                 letter = sub_word[i]
                 correct_letter = chosen_word[i]
@@ -312,26 +340,32 @@ def W_Game():
                     display_col.append("green")
                 elif letter in chosen_word:
                     if sub_word.count(letter) > chosen_word.count(letter):
-                        if letter != correct_letter:
-                            if no_doubles == False:
-                                display_col.append("orange")
-                                no_doubles = True
-                            else:
-                                display_col.append("grey")
-                        else:
-                            display_col.append("orange")
+
+                        for j in range(5):
+                            d_letter = sub_word[j]
+                            if d_letter == letter and j != i:
+                                if d_letter == correct_letter:
+                                    display_col.append("grey")
+                                else:
+                                    if j < i:
+                                        display_col.append("grey")
+                                    else:
+                                        display_col.append("orange")
                     else:
                         display_col.append("orange")
                 else:
                     display_col.append("grey")
 
-            def show_letters_with_delay(sub_word, display_col, word_frame, num, i=0):
+            #Displaying the guessed letters
+            i = 0
+            def show_delayed_letters(num, sub_word, display_col):
+                nonlocal i
                 if i < 5:
                     letter_label = Label(word_frame, text=sub_word[i].upper(), font=("Arial", 20), width=4, height=2, bg=display_col[i], fg="white")
                     letter_label.grid(row=num, column=i, padx=2, pady=2)
-                    w_frame.after(100, lambda: show_letters_with_delay(sub_word, display_col, word_frame, num, i+1))
-
-            show_letters_with_delay(sub_word, display_col, word_frame, num)
+                    w_frame.after(100, lambda: show_delayed_letters(num, sub_word, display_col))
+                    i += 1
+            show_delayed_letters(num, sub_word, display_col)
             num += 1
 
     chosen_word = random.choice(words)
@@ -351,6 +385,10 @@ def W_Game():
     answer_button.grid(row=2, column=1, pady=10, padx=10, sticky=W)
     error_mes.grid(row=3, column=0, columnspan=2)
     attempts_label.grid(row=4, column=0, columnspan=2, pady=10)
+
+    def on_enter_key(event):
+        w_submit()
+    w_entry.bind('<Return>', on_enter_key)
 
     word_frame = Frame(w_frame)
     word_frame.grid(row=5, column=0, columnspan=2)
