@@ -1,8 +1,9 @@
 from tkinter import *
+from tkinter import PhotoImage
 m = Tk()
 
 import random
-import time
+
 
 global title, Game1, Game2, Game3, chosen_game
 title = "Caio's Cool Collections"
@@ -153,7 +154,6 @@ def GK_game():
     answers = []
     for question in questions:
         answers.append(q_a[question])
-    print(answers) #For testing purposes, to be removed later
 
     global GK_frame, chosen_game
     chosen_game = "Quiz"
@@ -402,11 +402,118 @@ def W_Game():
 
 def HM_Game():
     menu_frame.destroy()
-    global chosen_game, hm_frame
+    global chosen_game, hm_frame, content_frame, hm_entry, hm_score
     chosen_game = "Hangman"
     hm_frame = Frame(m)
-    hm_frame.pack(pady=50)
-    hm_score = 0
+    hm_frame.pack(pady=(40,10))
+    content_frame = Frame(m)
+    hm_score = 6
+
+    #Words list 30 words
+    words = ["python", "javascript", "hangman", "programming", "developer", "function",
+            "variable", "Photo", "testing", "collections", "challenge", "interface",
+            "stickman", "wizard", "puzzle", "mystery", "adventure", "treasure",
+            "dragon", "castle", "forest", "mountain", "river", "ocean", "island",
+            "extreme", "intergalactic", "fantasy", "galaxy", "supercalifragilistic"]
+    chosen_word = random.choice(words)
+    print(chosen_word) #For testing purposes, to be removed later
+
+    #Function for what happens when you submit a letter
+    def hm_submit():
+        global hm_entry, error_mes, hm_submit_button, hidden_word, img_level, img
+        global stickman_label, used_letters_label, hm_score, wrong_letters, used_letters_desc, hm_desc
+        sub_letter = hm_entry.get()
+        sub_letter = sub_letter.lower()
+        if len(sub_letter) != 1:
+            error_mes.destroy()
+            error_mes = Label(hm_frame, text="Please enter a single letter.", font=("Arial", 12), fg="red")
+            error_mes.grid(row=3, column=0, columnspan=2)
+            hm_frame.after(2000, lambda: error_mes.config(text=""))
+        elif not sub_letter.isalpha():
+            error_mes.destroy()
+            error_mes = Label(hm_frame, text="Please enter a letter (a-z).", font=("Arial", 12), fg="red")
+            error_mes.grid(row=3, column=0, columnspan=2)
+            hm_frame.after(2000, lambda: error_mes.config(text=""))
+        elif sub_letter in hidden_word or sub_letter in wrong_letters:
+            error_mes.destroy()
+            error_mes = Label(hm_frame, text="You've already guessed that letter.", font=("Arial", 12), fg="red")
+            error_mes.grid(row=3, column=0, columnspan=2)
+            hm_frame.after(2000, lambda: error_mes.config(text=""))
+        else:
+            if sub_letter in chosen_word:
+                for i, letter in enumerate(chosen_word):
+                    if letter == sub_letter:
+                        sub_letter = sub_letter.upper()
+                        hidden_word[i] = sub_letter
+                hm_entry.delete(0, END)
+                error_mes.destroy()
+                error_mes = Label(hm_frame, text="Correct!", font=("Arial", 12, "bold"), fg="green")
+                error_mes.grid(row=3, column=0, columnspan=2)
+                hm_frame.after(1000, lambda: error_mes.config(text=""))
+                hm_word_label.config(text=" ".join(hidden_word))
+                if "_" not in hidden_word:
+                    error_mes.destroy()
+                    error_mes = Label(hm_frame, text="Congratulations! You've guessed the word!", font=("Arial", 16, "bold"), fg="green")
+                    error_mes.grid(row=3, column=0, columnspan=2)
+                    hm_entry.destroy()
+                    hm_submit_button.destroy()
+                    hm_desc.destroy()
+            else:
+                sub_letter = sub_letter.upper()
+                wrong_letters.append(sub_letter)
+                used_letters_desc.config(text=wrong_letters)
+                hm_entry.delete(0, END)
+                error_mes.destroy()
+                error_mes = Label(hm_frame, text="Incorrect!", font=("Arial", 12), fg="red")
+                error_mes.grid(row=3, column=0, columnspan=2)
+                hm_frame.after(1000, lambda: error_mes.config(text=""))
+                hm_score -= 1
+                img_level += 1
+                img_path = "Stickman{}.png".format(img_level)
+                img = PhotoImage(file=img_path)
+                stickman_label.config(image=img)
+                stickman_label.image = img
+                if hm_score == 0:
+                    error_mes.destroy()
+                    error_mes = Label(hm_frame, text="Game Over! The word was '{}'.".format(chosen_word), font=("Arial", 16, "bold"))
+                    error_mes.grid(row=3, column=0, columnspan=2)
+                    hm_entry.destroy()
+                    hm_submit_button.destroy()
+
+    global hm_desc, hm_entry, hm_submit_button, error_mes
+    hm_label = Label(hm_frame, text="Hangman", font=("Arial", 30, "bold"))
+    hm_desc = Label(hm_frame, text="Enter a letter to guess the word:", font=("Arial", 16))
+    hm_entry = Entry(hm_frame, font=("Arial", 16), width=5)
+    hm_submit_button = Button(hm_frame, text="Submit", font=("Arial", 12), command=hm_submit)
+    error_mes = Label(hm_frame, text="", font=("Arial", 12), fg="red")
+    
+    global hidden_word, img_level, img, stickman_label, used_letters_label, wrong_letters, used_letters_desc
+    
+    # Content: Hidden word (left), Stickman (right)
+    wrong_letters = []
+    hidden_word = ["_"] * len(chosen_word)
+    hm_word_label = Label(content_frame, text=" ".join(hidden_word), font=("Arial", 24))
+    used_letters_label = Label(content_frame, text="Wrong letters:", font=("Arial", 12), justify=CENTER)
+    used_letters_desc = Label(content_frame, text=wrong_letters, font=("Arial", 12), justify=CENTER)
+    
+    img_level = 0 #Stickman image level
+    img_path = "Stickman{}.png".format(img_level) #Initial stickman image
+    img = PhotoImage(file=img_path) 
+    stickman_label = Label(content_frame, image=img, width=200, height=350)
+    stickman_label.image = img
+
+    #Layout
+    hm_label.grid(row=0, column=0, columnspan=2, sticky=W+E, pady=30)
+    hm_desc.grid(row=1, column=0, columnspan=2, sticky=W+E)
+    hm_entry.grid(row=2, column=0, pady=5, sticky=E)
+    hm_submit_button.grid(row=2, column=1, pady=5, sticky=W, padx=10)
+    error_mes.grid(row=3, column=0, columnspan=2)
+    content_frame.pack()
+
+    hm_word_label.grid(row=0, column=0, sticky=W+E, padx=50)
+    stickman_label.grid(row=0, rowspan=3, column=1, sticky=E)
+    used_letters_label.grid(row=1, column=0, sticky=W+E)
+    used_letters_desc.grid(row=2, column=0, sticky=W+E)
     
     global menu_exit
     menu_exit.config(text="Exit to Menu", command=exit_to_menu)
@@ -419,6 +526,7 @@ def exit_to_menu():
         w_frame.destroy()
     elif chosen_game == "Hangman":
         hm_frame.destroy()
+        content_frame.destroy()
     menu_exit.destroy()
     open_menu()
 
@@ -482,13 +590,13 @@ def menu():
     
     if name_entry.get() == "":
         global error_mes
-        error_mes.destroy()
-        error_mes = Label(frame, text="Please enter a name to continue.", font=("Arial", 12), fg="red")
-        error_mes.pack()
+        error_mes.config(text="Please enter a name to continue.")
+        frame.after(2000, lambda: error_mes.config(text=""))
     else:
         open_menu()
 
 #Beginning message
+
 title = Label(frame, text="Welcome to Caio's Cool Collections!", font=("Arial", 30), justify=CENTER)
 subtext = Label(frame, text="Before we begin, please enter your name below:", font=("Arial", 18), justify=CENTER)
 title.pack(pady=(50,20))
@@ -497,8 +605,12 @@ global name_entry
 name_entry = Entry(frame, font=("Arial", 16))
 enter_button = Button(frame, text="Enter", font=("Arial", 12), command=menu)
 error_mes = Label(frame, text="", font=("Arial", 12), fg="red")
-error_mes.pack()
+error_mes.pack(pady=10)
 name_entry.pack()
 enter_button.pack(pady=20)
+
+def on_enter_key(event):
+    menu()
+name_entry.bind('<Return>', on_enter_key)
 
 m.mainloop()
