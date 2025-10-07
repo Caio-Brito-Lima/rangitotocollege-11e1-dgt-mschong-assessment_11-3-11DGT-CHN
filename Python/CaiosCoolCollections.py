@@ -434,22 +434,19 @@ def HM_Game():
             error_mes = Label(hm_frame, text="Please enter a letter (a-z).", font=("Arial", 12), fg="red")
             error_mes.grid(row=3, column=0, columnspan=2)
             hm_frame.after(2000, lambda: error_mes.config(text=""))
-        elif sub_letter in hidden_word or sub_letter in wrong_letters:
+        elif sub_letter.upper() in hidden_word or sub_letter.upper() in wrong_letters:
             error_mes.destroy()
             error_mes = Label(hm_frame, text="You've already guessed that letter.", font=("Arial", 12), fg="red")
             error_mes.grid(row=3, column=0, columnspan=2)
             hm_frame.after(2000, lambda: error_mes.config(text=""))
         else:
             if sub_letter in chosen_word:
-                for i, letter in enumerate(chosen_word):
-                    if letter == sub_letter:
+                for i in range(len(chosen_word)):
+                    letter = chosen_word[i]
+                    if letter  == sub_letter.lower():
                         sub_letter = sub_letter.upper()
                         hidden_word[i] = sub_letter
                 hm_entry.delete(0, END)
-                error_mes.destroy()
-                error_mes = Label(hm_frame, text="Correct!", font=("Arial", 12, "bold"), fg="green")
-                error_mes.grid(row=3, column=0, columnspan=2)
-                hm_frame.after(1000, lambda: error_mes.config(text=""))
                 hm_word_label.config(text=" ".join(hidden_word))
                 if "_" not in hidden_word:
                     error_mes.destroy()
@@ -458,15 +455,16 @@ def HM_Game():
                     hm_entry.destroy()
                     hm_submit_button.destroy()
                     hm_desc.destroy()
+                else:
+                    error_mes.destroy()
+                    error_mes = Label(hm_frame, text="Correct!", font=("Arial", 12, "bold"), fg="green")
+                    error_mes.grid(row=3, column=0, columnspan=2)
+                    hm_frame.after(1000, lambda: error_mes.config(text=""))
             else:
                 sub_letter = sub_letter.upper()
                 wrong_letters.append(sub_letter)
                 used_letters_desc.config(text=wrong_letters)
                 hm_entry.delete(0, END)
-                error_mes.destroy()
-                error_mes = Label(hm_frame, text="Incorrect!", font=("Arial", 12), fg="red")
-                error_mes.grid(row=3, column=0, columnspan=2)
-                hm_frame.after(1000, lambda: error_mes.config(text=""))
                 hm_score -= 1
                 img_level += 1
                 img_path = "Stickman{}.png".format(img_level)
@@ -479,6 +477,11 @@ def HM_Game():
                     error_mes.grid(row=3, column=0, columnspan=2)
                     hm_entry.destroy()
                     hm_submit_button.destroy()
+                else:
+                    error_mes.destroy()
+                    error_mes = Label(hm_frame, text="Incorrect!", font=("Arial", 12), fg="red")
+                    error_mes.grid(row=3, column=0, columnspan=2)
+                    hm_frame.after(1000, lambda: error_mes.config(text=""))
 
     global hm_desc, hm_entry, hm_submit_button, error_mes
     hm_label = Label(hm_frame, text="Hangman", font=("Arial", 30, "bold"))
