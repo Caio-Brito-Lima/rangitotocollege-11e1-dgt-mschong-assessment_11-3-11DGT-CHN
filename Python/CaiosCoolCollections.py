@@ -275,8 +275,8 @@ def W_Game():
     #words list (45 5-letter words)
     words = ["blade", "crane", "flint", "grape", "house", "jumpy", "knock", "light", "mango", "night", 
     "ocean", "plant", "queen", "river", "stone", "table", "under", "vivid", "whale", "zesty", "pinky", 
-    "cloud", "brave", "charm", "dwarf", "eagle", "frost", "glove", "honey", "ivory", "jewel", "lunar",
-    "magic", "noble", "orbit", "pearl", "quest", "royal", "sugar", "tiger", "urban", "vapor", "waltz",
+    "cloud", "brave", "charm", "dwarf", "eagle", "frost", "glove", "honey", "grace", "jewel", "lunar",
+    "magic", "noble", "orbit", "pearl", "quest", "royal", "sugar", "tiger", "urban", "races", "waltz",
     "crash", "drink"]
 
     #Function for what happens when you submit a word
