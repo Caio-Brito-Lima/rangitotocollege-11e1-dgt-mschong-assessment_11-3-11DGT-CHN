@@ -104,7 +104,8 @@ def Scores():
             att_txt = "attempts"
     
     scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12), fg=gk_colour, justify=CENTER)
-    scores_text2 = Label(scores_window, text="{}: Solved in {} {}".format(Game2, w_score, att_txt), font=("Arial", 12), fg=w_colour, justify=CENTER)
+    scores_text2 = Label(scores_window, text="{}: Solved in {} {}".format(Game2, w_score, att_txt)
+                         , font=("Arial", 12), fg=w_colour, justify=CENTER)
     scores_text3 = Label(scores_window, text="{}: No scores yet!".format(Game3), font=("Arial", 12), justify=CENTER)
     ok_button = Button(scores_window, text="OK", width=round(button_width/4), command=scores_window.destroy)
     
@@ -202,27 +203,33 @@ def GK_game():
                 question.config(text=chosen_question)
             else: # End of quiz
                 error_mes.destroy()
-                error_mes = Label(GK_frame, text="Quiz Over! You have completed all the questions.", font=("Arial", 18))
+                error_mes = Label(GK_frame, text="Quiz Over! You have completed all the questions."
+                                  , font=("Arial", 18))
                 error_mes.grid(row=4, column=0, columnspan=3)
                 question_num.destroy()
                 question.destroy()
                 answer_label.destroy()
                 answer_entry.destroy()
                 answer_button.destroy()
-                score_label = Label(GK_frame, text="Your final score is: {}/10".format(GK_score), font=("Arial", 16, "bold"))
+                score_label = Label(GK_frame, text="Your final score is: {}/10".format(GK_score)
+                                    , font=("Arial", 16, "bold"))
                 score_label.grid(row=5, column=0, columnspan=3, pady=20)
                 if GK_score == 10:
-                    result_label = Label(GK_frame, text="Perfect Score! Well done!", font=("Arial", 16, "bold"), fg="green")
+                    result_label = Label(GK_frame, text="Perfect Score! Well done!"
+                                         , font=("Arial", 16, "bold"), fg="green")
                     result_label.grid(row=6, column=0, columnspan=3)
                 elif GK_score >= 7:
-                    result_label = Label(GK_frame, text="Great Job!", font=("Arial", 16, "bold"))
+                    result_label = Label(GK_frame, text="Great Job!"
+                                         , font=("Arial", 16, "bold"))
                     result_label.grid(row=6, column=0, columnspan=3)
                 elif GK_score >= 4:
-                    result_label = Label(GK_frame, text="Not bad, but you can do better!", font=("Arial", 16, "bold"))
+                    result_label = Label(GK_frame, text="Not bad, but you can do better!"
+                                         , font=("Arial", 16, "bold"))
                     result_label.grid(row=6, column=0, columnspan=3)
         else:
             error_mes.destroy()
-            error_mes = Label(GK_frame, text="Please enter an answer before submitting.", font=("Arial", 12), fg="red")
+            error_mes = Label(GK_frame, text="Please enter an answer before submitting."
+                              , font=("Arial", 12), fg="red")
             error_mes.grid(row=4, column=0, columnspan=3)
 
     global i, GK_score
@@ -301,7 +308,8 @@ def W_Game():
                 w_desc.destroy()
                 answer_button.destroy()
                 w_entry.destroy()
-                error_mes = Label(w_frame, text="Congratulations! You've guessed the word!", font=("Arial", 16, "bold"), fg="green")
+                error_mes = Label(w_frame, text="Congratulations! You've guessed the word!", font=("Arial", 16, "bold")
+                                  , fg="green")
                 error_mes.grid(row=3, column=0, columnspan=2)
                 attempts_label.destroy()
                 global w_score
@@ -314,7 +322,8 @@ def W_Game():
                     extra_text = "Phew!"
                 else:
                     extra_text = "Great job!"
-                score_label = Label(w_frame, text="You found the word in {} {}!\n{}".format(w_score, att_txt, extra_text), font=("Arial", 16, "bold"))
+                score_label = Label(w_frame, text="You found the word in {} {}!\n{}".format(w_score, att_txt, extra_text)
+                                    , font=("Arial", 16, "bold"))
                 score_label.grid(row=4, column=0, columnspan=3, pady=20)
             elif attempts > 1:
                 attempts -= 1
@@ -361,7 +370,8 @@ def W_Game():
             def show_delayed_letters(num, sub_word, display_col):
                 nonlocal i
                 if i < 5:
-                    letter_label = Label(word_frame, text=sub_word[i].upper(), font=("Arial", 20), width=4, height=2, bg=display_col[i], fg="white")
+                    letter_label = Label(word_frame, text=sub_word[i].upper(), font=("Arial", 20)
+                                         , width=4, height=2, bg=display_col[i], fg="white")
                     letter_label.grid(row=num, column=i, padx=2, pady=2)
                     w_frame.after(100, lambda: show_delayed_letters(num, sub_word, display_col))
                     i += 1
@@ -421,7 +431,7 @@ def HM_Game():
     #Function for what happens when you submit a letter
     def hm_submit():
         global hm_entry, error_mes, hm_submit_button, hidden_word, img_level, img
-        global stickman_label, used_letters_label, hm_score, wrong_letters, used_letters_desc, hm_desc
+        global stickman_label, used_letters_label, hm_score, wrong_letters, hm_desc
         sub_letter = hm_entry.get()
         sub_letter = sub_letter.lower()
         if len(sub_letter) != 1:
@@ -448,22 +458,26 @@ def HM_Game():
                         hidden_word[i] = sub_letter
                 hm_entry.delete(0, END)
                 hm_word_label.config(text=" ".join(hidden_word))
+                
                 if "_" not in hidden_word:
-                    error_mes.destroy()
-                    error_mes = Label(hm_frame, text="Congratulations! You've guessed the word!", font=("Arial", 16, "bold"), fg="green")
-                    error_mes.grid(row=3, column=0, columnspan=2)
+                    win_mes = Label(hm_frame, text="Congratulations! You've guessed the word!"
+                                      , font=("Arial", 16, "bold"), fg="green")
+                    win_mes.grid(row=3, column=0, columnspan=2)
                     hm_entry.destroy()
                     hm_submit_button.destroy()
                     hm_desc.destroy()
-                else:
+                elif "_" in hidden_word:
                     error_mes.destroy()
                     error_mes = Label(hm_frame, text="Correct!", font=("Arial", 12, "bold"), fg="green")
                     error_mes.grid(row=3, column=0, columnspan=2)
                     hm_frame.after(1000, lambda: error_mes.config(text=""))
             else:
                 sub_letter = sub_letter.upper()
-                wrong_letters.append(sub_letter)
-                used_letters_desc.config(text=wrong_letters)
+                if len(wrong_letters) > 0: 
+                    wrong_letters += " "+sub_letter 
+                else: 
+                    wrong_letters += sub_letter
+                used_letters_label.config(text="Wrong letters:\n\n{}".format(wrong_letters))
                 hm_entry.delete(0, END)
                 hm_score -= 1
                 img_level += 1
@@ -472,12 +486,12 @@ def HM_Game():
                 stickman_label.config(image=img)
                 stickman_label.image = img
                 if hm_score == 0:
-                    error_mes.destroy()
-                    error_mes = Label(hm_frame, text="Game Over! The word was '{}'.".format(chosen_word), font=("Arial", 16, "bold"))
-                    error_mes.grid(row=3, column=0, columnspan=2)
+                    lose_mes = Label(hm_frame, text="Game Over! The word was '{}'.".format(chosen_word)
+                                      , font=("Arial", 16, "bold"))
+                    lose_mes.grid(row=3, column=0, columnspan=2)
                     hm_entry.destroy()
                     hm_submit_button.destroy()
-                else:
+                elif hm_score > 0:
                     error_mes.destroy()
                     error_mes = Label(hm_frame, text="Incorrect!", font=("Arial", 12), fg="red")
                     error_mes.grid(row=3, column=0, columnspan=2)
@@ -490,14 +504,14 @@ def HM_Game():
     hm_submit_button = Button(hm_frame, text="Submit", font=("Arial", 12), command=hm_submit)
     error_mes = Label(hm_frame, text="", font=("Arial", 12), fg="red")
     
-    global hidden_word, img_level, img, stickman_label, used_letters_label, wrong_letters, used_letters_desc
+    global hidden_word, img_level, img, stickman_label, used_letters_label, wrong_letters
     
     # Content: Hidden word (left), Stickman (right)
-    wrong_letters = []
+    wrong_letters = ""
     hidden_word = ["_"] * len(chosen_word)
     hm_word_label = Label(content_frame, text=" ".join(hidden_word), font=("Arial", 24))
-    used_letters_label = Label(content_frame, text="Wrong letters:", font=("Arial", 12), justify=CENTER)
-    used_letters_desc = Label(content_frame, text=wrong_letters, font=("Arial", 12), justify=CENTER)
+    used_letters_label = Label(content_frame, text="Wrong letters:\n\n{}".format(wrong_letters),
+                               font=("Arial", 12), justify=CENTER)
     
     img_level = 0 #Stickman image level
     img_path = "Stickman{}.png".format(img_level) #Initial stickman image
@@ -514,12 +528,15 @@ def HM_Game():
     content_frame.pack()
 
     hm_word_label.grid(row=0, column=0, sticky=W+E, padx=50)
-    stickman_label.grid(row=0, rowspan=3, column=1, sticky=E)
+    stickman_label.grid(row=0, rowspan=2, column=1, sticky=E)
     used_letters_label.grid(row=1, column=0, sticky=W+E)
-    used_letters_desc.grid(row=2, column=0, sticky=W+E)
     
     global menu_exit
     menu_exit.config(text="Exit to Menu", command=exit_to_menu)
+
+    def on_enter_key(event):
+        hm_submit()
+    hm_entry.bind('<Return>', on_enter_key)
 
 def exit_to_menu():
     global chosen_game
