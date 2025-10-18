@@ -82,31 +82,56 @@ def Scores():
     scores_desc = Label(scores_window, text="Welcome to Scores, {}! Here, you'll be able to see all the scores\n"
     "you've gotten throughout the three games available!".format(player_name), font=("Arial", 12), justify=LEFT)
     
-    global Game1, Game2, Game3, GK_score, w_score
+    global Game1, Game2, Game3
+    global GK_score, w_score, hm_score, hm_played
     #Checking scores
+    #Checking quiz score
     if 'GK_score' in globals():
-        if GK_score == 10:
+        global GK_score
+        if GK_score > 8:
             gk_colour = "green"
         else:
             gk_colour = "black"
     else:
         GK_score = 0
         gk_colour = "black"
+    #Checking wordle score
     if 'w_score' not in globals():
-        w_score = "no"
+        global w_score
+        w_score = 0
         att_txt = "attempts"
         w_colour = "black"
     else:
-        w_colour = "green"
+        if w_score > 0:
+            w_colour = "green"
+        else:
+            w_colour = "black"
         if w_score == 1:
             att_txt = "attempt"
         else:
             att_txt = "attempts"
+    #Checking hangman score
+    if 'hm_score' in globals() and 'hm_played' in globals():
+        if hm_played == True:
+            hm_colour = "green"
+            if hm_score == 1:
+                letters_txt = "letter"
+            else:
+                letters_txt = "letters"
+        else:
+            hm_colour = "black"
+            letters_txt = "letters"
+    else:
+        hm_score = 0
+        letters_txt = "letters"
+        hm_colour = "black"
     
-    scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12), fg=gk_colour, justify=CENTER)
+    scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12), 
+                         fg=gk_colour, justify=CENTER)
     scores_text2 = Label(scores_window, text="{}: Solved in {} {}".format(Game2, w_score, att_txt)
                          , font=("Arial", 12), fg=w_colour, justify=CENTER)
-    scores_text3 = Label(scores_window, text="{}: No scores yet!".format(Game3), font=("Arial", 12), justify=CENTER)
+    scores_text3 = Label(scores_window, text="{}: Solved with {} {}".format(Game3, hm_score, "wrong "+letters_txt),
+                          font=("Arial", 12), fg=hm_colour, justify=CENTER)
     ok_button = Button(scores_window, text="OK", width=round(button_width/4), command=scores_window.destroy)
     
     #Layout
@@ -130,16 +155,16 @@ def GK_game():
         "What is the function to output text in Python?": "print",
         "Who is the most sassy teacher?": "Miss Chong",
         "What is the slang name for New York City?": ["The Big Apple", "Big Apple"],
-        "What is a group of owls called?": ["A parliament"],
+        "What is a group of owls called?": ["A parliament", "Parliament"],
         "What is the symbol for iron on the periodic table?": "Fe",
         "What continent is the only one with land in all four hemispheres?": "Africa",
         "What is the hardest natural substance on Earth?": "Diamond",
         "What year was the official Minecraft release?": "2011",
-        "What is the grass type pokemon starter from the third generation?": "Treecko",
-        "What is the fire type pokemon starter from the third generation?": "Torchic",
-        "What is the water type pokemon starter from the third generation?": "Mudkip",
+        "What is the largest mammal in the world?": "Blue Whale",
+        "What are the first 6 digits of pi?": "3.14159",
+        "True or False: Have you eaten an onion today?": ["True", "False"],
         "What is the name of the tallest mountain in Japan?": "Mount Fuji",
-        "What do you have to eat to keep the doctor away?": "An apple",
+        "What do you have to eat to keep the doctor away?": ["An apple", "Apple"],
         "What is the name of the fairy in Peter Pan?": "Tinker Bell",
         "What is the name of the main character's partner in Breaking Bad?": ["Jesse Pinkman", "Jesse"],
     }
@@ -172,7 +197,7 @@ def GK_game():
             if isinstance(answers[i], list): # For questions with multiple possible answers
                 correct = False
                 for ans in answers[i]:
-                    if sub_answer.lower() in ans.lower():
+                    if sub_answer.lower() == ans.lower():
                         correct = True
                         break
             else:
@@ -412,12 +437,15 @@ def W_Game():
 
 def HM_Game():
     menu_frame.destroy()
-    global chosen_game, hm_frame, content_frame, hm_entry, hm_score
+    global chosen_game, hm_frame, content_frame, hm_entry, hm_score, hm_played
+    global hm_attempts
     chosen_game = "Hangman"
     hm_frame = Frame(m)
     hm_frame.pack(pady=(40,10))
     content_frame = Frame(m)
-    hm_score = 6
+    hm_score = 0
+    hm_attempts = 6
+    hm_played = False
 
     #Words list 30 words
     words = ["python", "javascript", "hangman", "programming", "developer", "function",
@@ -432,6 +460,7 @@ def HM_Game():
     def hm_submit():
         global hm_entry, error_mes, hm_submit_button, hidden_word, img_level, img
         global stickman_label, used_letters_label, hm_score, wrong_letters, hm_desc
+        global hm_played, hm_attempts
         sub_letter = hm_entry.get()
         sub_letter = sub_letter.lower()
         if len(sub_letter) != 1:
@@ -466,6 +495,9 @@ def HM_Game():
                     hm_entry.destroy()
                     hm_submit_button.destroy()
                     hm_desc.destroy()
+                    global hm_score
+                    hm_score = len(wrong_letters.split())
+                    hm_played = True
                 elif "_" in hidden_word:
                     error_mes.destroy()
                     error_mes = Label(hm_frame, text="Correct!", font=("Arial", 12, "bold"), fg="green")
@@ -479,19 +511,21 @@ def HM_Game():
                     wrong_letters += sub_letter
                 used_letters_label.config(text="Wrong letters:\n\n{}".format(wrong_letters))
                 hm_entry.delete(0, END)
-                hm_score -= 1
+                hm_attempts -= 1
                 img_level += 1
                 img_path = "Stickman{}.png".format(img_level)
                 img = PhotoImage(file=img_path)
                 stickman_label.config(image=img)
                 stickman_label.image = img
-                if hm_score == 0:
+                if hm_attempts == 0:
                     lose_mes = Label(hm_frame, text="Game Over! The word was '{}'.".format(chosen_word)
                                       , font=("Arial", 16, "bold"))
                     lose_mes.grid(row=3, column=0, columnspan=2)
                     hm_entry.destroy()
                     hm_submit_button.destroy()
-                elif hm_score > 0:
+                    hm_desc.destroy()
+                    hm_played = True
+                elif hm_attempts > 0:
                     error_mes.destroy()
                     error_mes = Label(hm_frame, text="Incorrect!", font=("Arial", 12), fg="red")
                     error_mes.grid(row=3, column=0, columnspan=2)
