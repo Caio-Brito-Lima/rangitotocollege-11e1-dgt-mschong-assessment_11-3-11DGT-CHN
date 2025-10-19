@@ -6,12 +6,21 @@ import random
 
 
 global title, Game1, Game2, Game3, chosen_game
+global colours
 title = "Caio's Cool Collections"
 m.title(title)
 Game1 = "Quiz"
 Game2 = "Wordle"
 Game3 = "Hangman"
 chosen_game = ""
+colours = {"blue": "#47AAAE",
+           "dblue": "#358282",
+           "red": "#FF5E5B",
+           "dred": "#BE514B",
+           "white": "#FFFFEA",
+           "yellow": "#FFED66",
+           "dyellow": "#FFBA85"}
+m.config(bg=colours["white"])
 
 #Setting window size
 global width, height
@@ -27,7 +36,8 @@ button_height = 5
 #Initial Frame
 global frame
 frame = Frame(m)
-frame.pack(pady=20)
+frame.pack(pady=80)
+frame.config(bg=colours["white"])
 
 #Tutorial Functions
 def GK_tutorial():
@@ -651,17 +661,26 @@ def menu():
 
 #Beginning message
 
-title = Label(frame, text="Welcome to Caio's Cool Collections!", font=("Arial", 30), justify=CENTER)
+title = Label(frame, text="Welcome to Caio's Cool Collections!", font=("Arial", 30, "bold"), justify=CENTER)
 subtext = Label(frame, text="Before we begin, please enter your name below:", font=("Arial", 18), justify=CENTER)
-title.pack(pady=(50,20))
-subtext.pack(pady=(20,50))
+title.pack(pady=20)
+subtext.pack(pady=20)
 global name_entry
 name_entry = Entry(frame, font=("Arial", 16))
-enter_button = Button(frame, text="Enter", font=("Arial", 12), command=menu)
-error_mes = Label(frame, text="", font=("Arial", 12), fg="red")
-error_mes.pack(pady=10)
+enter_label = Label(frame, text="Enter", bg=colours['blue'], fg='white',
+                    font=("Arial", 12, "bold"), width=8, height=2, bd=2, relief='flat')
+enter_label.bind('<Button-1>', lambda e: menu())
+error_mes = Label(frame, text="", font=("Arial", 12), fg=colours["red"])
+error_mes.pack(pady=20)
 name_entry.pack()
-enter_button.pack(pady=20)
+enter_label.pack(pady=20)
+
+#colour config
+title.config(bg=colours["white"], fg="black")
+subtext.config(bg=colours["white"], fg=colours["blue"])
+name_entry.config(bg=colours["yellow"], fg="black",
+                border=2, insertbackground="black")
+error_mes.config(bg=colours["white"])
 
 def on_enter_key(event):
     menu()
