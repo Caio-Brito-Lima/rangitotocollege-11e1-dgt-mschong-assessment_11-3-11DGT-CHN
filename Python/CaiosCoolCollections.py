@@ -18,6 +18,7 @@ colours = {"blue": "#47AAAE",
            "red": "#FF5E5B",
            "dred": "#BE514B",
            "white": "#FFFFEA",
+           "grey": "#808276",
            "yellow": "#FFED66",
            "dyellow": "#FFBA85"}
 m.config(bg=colours["white"])
@@ -44,52 +45,82 @@ def GK_tutorial():
     tutorial_window = Toplevel(m)
     tutorial_window.resizable(False, False) # code learned from stack overflow
     tutorial_window.title("How to play: {}".format(Game1))
-    tutorial_label = Label(tutorial_window, text="How to play: General Knowledge Quiz", font=("Arial", 16, "bold"))
-    tutorial_label.pack(pady=10)
-    tutorial_desc = Label(tutorial_window, text="This game is simple! You will be asked 10 randomly selected questions,\n"
-    "and all you have to do is answer them correctly and you can get all the\n"
+    tutorial_label = Label(tutorial_window, text="How to play:\nGeneral Knowledge Quiz", 
+                           font=("Arial", 16, "bold"), justify=CENTER)
+    tutorial_label.pack(pady=(40,20))
+    tutorial_desc = Label(tutorial_window, text="This game is simple!\nYou will be asked 10 randomly selected questions, "
+    "and all you have to do is answer them correctly and you can get all the "
     "points!\n\nGood Luck!", font=("Arial", 12), justify=LEFT)
     tutorial_desc.pack(padx=20, pady=20)
-    ok_button = Button(tutorial_window, text="OK", width=round(button_width/4), command=tutorial_window.destroy)
-    ok_button.pack(pady=10)
+    ok_button = Label(tutorial_window, text="OK", font=("Arial", 12, "bold"))
+    ok_button.bind('<Button-1>', lambda e: tutorial_window.destroy())
+    ok_button.pack(fill=Y, side=BOTTOM, pady=20, padx=button_width*5)
+
+    #Colour config
+    tutorial_window.config(bg=colours["white"])
+    tutorial_label.config(bg=colours["white"], fg="black")
+    tutorial_desc.config(bg=colours["white"], fg=colours["dblue"], wraplength=400)
+    ok_button.config(bg=colours['red'], fg='white', width=round(button_width/2), 
+                     height=2, bd=3, relief="solid")
+    
 
 def W_tutorial():
     tutorial_window = Toplevel(m)
     tutorial_window.resizable(False, False) # code learned from stack overflow
     tutorial_window.title("How to play: {}".format(Game2))
-    tutorial_label = Label(tutorial_window, text="How to play: Wordle", font=("Arial", 16, "bold"))
-    tutorial_label.pack(pady=10)
-    tutorial_desc = Label(tutorial_window, text="I'm sure you know how this goes, you will be given 6 chances to guess a 5 letter word.\n"
-    "After each guess, the letters will change colour to show how close you are\n"
-    "to guessing the word. green means the letter is in the correct position,\n"
-    "yellow means the letter is in the word but in the wrong position,\n"
+    tutorial_label = Label(tutorial_window, text="How to play:\nWordle", 
+                           font=("Arial", 16, "bold"), justify=CENTER)
+    tutorial_label.pack(pady=(40,20))
+    tutorial_desc = Label(tutorial_window, text="I'm sure you know how this goes, "
+                          "you will be given 6 chances to guess a 5 letter word. "
+    "After each guess, the letters will change colour to show how close you are "
+    "to guessing the word. blue means the letter is in the correct position, "
+    "yellow means the letter is in the word but in the wrong position, "
     "and grey means the letter is not in the word at all.\n\nGood Luck!", font=("Arial", 12), justify=LEFT)
     tutorial_desc.pack(padx=20, pady=20)
-    ok_button = Button(tutorial_window, text="OK", width=round(button_width/4), command=tutorial_window.destroy)
-    ok_button.pack(pady=10)
+    ok_button = Label(tutorial_window, text="OK", font=("Arial", 12, "bold"))
+    ok_button.bind('<Button-1>', lambda e: tutorial_window.destroy())
+    ok_button.pack(fill=Y, side=BOTTOM, pady=20, padx=button_width*5)
+
+    #Colour config
+    tutorial_window.config(bg=colours["white"])
+    tutorial_label.config(bg=colours["white"], fg="black")
+    tutorial_desc.config(bg=colours["white"], fg=colours["dblue"], wraplength=400)
+    ok_button.config(bg=colours['red'], fg='white', width=round(button_width/2), 
+                     height=2, bd=3, relief="solid")
 
 def HM_tutorial():
     tutorial_window = Toplevel(m)
     tutorial_window.resizable(False, False) # code learned from stack overflow
     tutorial_window.title("How to play: {}".format(Game3))
-    tutorial_label = Label(tutorial_window, text="Welcome to Hangman!", font=("Arial", 16, "bold"))
-    tutorial_label.pack(pady=10)
-    tutorial_desc = Label(tutorial_window, text="In this game, you will be given a word with missing letters.\n"
-    "You have to guess the word by suggesting letters within a certain number of guesses.\n"
-    "For each incorrect guess, a part of the hangman will be drawn.\n"
-    "You have 6 incorrect guesses before the hangman is fully drawn and you lose!\n\nGood Luck!", font=("Arial", 12), justify=LEFT)
+    tutorial_label = Label(tutorial_window, text="How to play:\nHangman", font=("Arial", 16, "bold"))
+    tutorial_label.pack(pady=(40,20))
+    tutorial_desc = Label(tutorial_window, text="In this game, you will be given a word with missing letters. "
+    "You have to guess the word by suggesting letters within a certain number of guesses. "
+    "For each incorrect guess, a part of the hangman will be drawn. "
+    "You have 6 incorrect guesses before the hangman is fully drawn and you lose!\n\nGood Luck!", font=("Arial", 12),
+      justify=LEFT)
     tutorial_desc.pack(padx=20, pady=20)
-    ok_button = Button(tutorial_window, text="OK", width=round(button_width/4), command=tutorial_window.destroy)
-    ok_button.pack(pady=10)
+    ok_button = Label(tutorial_window, text="OK", font=("Arial", 12, "bold"))
+    ok_button.bind('<Button-1>', lambda e: tutorial_window.destroy())
+    ok_button.pack(fill=Y, side=BOTTOM, pady=20, padx=button_width*5)
+
+    #Colour config
+    tutorial_window.config(bg=colours["white"])
+    tutorial_label.config(bg=colours["white"], fg="black")
+    tutorial_desc.config(bg=colours["white"], fg=colours["dblue"], wraplength=400)
+    ok_button.config(bg=colours['red'], fg='white', width=round(button_width/2), 
+                     height=2, bd=3, relief="solid")
 
 #Scores Function
 def Scores():
     scores_window = Toplevel(m)
+    scores_window.geometry("500x420")
     scores_window.title("Scores")
-    scores_label = Label(scores_window, text="Scores", font=("Arial", 16, "bold"))
-    scores_label.pack(pady=10)
+    scores_label = Label(scores_window, text="Scores", font=("Arial", 20, "bold"))
+    scores_label.pack(pady=(40,10))
     global player_name
-    scores_desc = Label(scores_window, text="Welcome to Scores, {}! Here, you'll be able to see all the scores\n"
+    scores_desc = Label(scores_window, text="Welcome to Scores, {}! Here, you'll be able to see all the scores "
     "you've gotten throughout the three games available!".format(player_name), font=("Arial", 12), justify=LEFT)
     
     global Game1, Game2, Game3
@@ -99,7 +130,7 @@ def Scores():
     if 'GK_score' in globals():
         global GK_score
         if GK_score > 8:
-            gk_colour = "green"
+            gk_colour = colours["dblue"]
         else:
             gk_colour = "black"
     else:
@@ -113,7 +144,7 @@ def Scores():
         w_colour = "black"
     else:
         if w_score > 0:
-            w_colour = "green"
+            w_colour = colours["dblue"]
         else:
             w_colour = "black"
         if w_score == 1:
@@ -123,7 +154,7 @@ def Scores():
     #Checking hangman score
     if 'hm_score' in globals() and 'hm_played' in globals():
         if hm_played == True:
-            hm_colour = "green"
+            hm_colour = colours["dblue"]
             if hm_score == 1:
                 letters_txt = "letter"
             else:
@@ -136,20 +167,32 @@ def Scores():
         letters_txt = "letters"
         hm_colour = "black"
     
-    scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12), 
+    scores_text1 = Label(scores_window, text="{}: {}/10".format(Game1, GK_score), font=("Arial", 12, "bold"), 
                          fg=gk_colour, justify=CENTER)
     scores_text2 = Label(scores_window, text="{}: Solved in {} {}".format(Game2, w_score, att_txt)
-                         , font=("Arial", 12), fg=w_colour, justify=CENTER)
+                         , font=("Arial", 12, "bold"), fg=w_colour, justify=CENTER)
     scores_text3 = Label(scores_window, text="{}: Solved with {} {}".format(Game3, hm_score, "wrong "+letters_txt),
-                          font=("Arial", 12), fg=hm_colour, justify=CENTER)
-    ok_button = Button(scores_window, text="OK", width=round(button_width/4), command=scores_window.destroy)
+                          font=("Arial", 12, "bold"), fg=hm_colour, justify=CENTER)
+    ok_button = Label(scores_window, text="OK", font=("Arial", 12, "bold"))
+    ok_button.bind('<Button-1>', lambda e: scores_window.destroy())
     
     #Layout
     scores_desc.pack(padx=20, pady=20)
     scores_text1.pack(pady=10)
     scores_text2.pack(pady=10)
     scores_text3.pack(pady=10)
-    ok_button.pack(pady=10)
+    ok_button.pack(fill=Y, side=BOTTOM, pady=20, padx=button_width*5)
+
+    #Colour config
+    scores_window.config(bg=colours["white"])
+    scores_label.config(bg=colours["white"], fg="black")
+    scores_desc.config(bg=colours["white"], fg=colours["dblue"], wraplength=400)
+    scores_text1.config(bg=colours["white"])
+    scores_text2.config(bg=colours["white"])
+    scores_text3.config(bg=colours["white"])
+    ok_button.config(bg=colours['red'], fg='white',
+                     width=round(button_width/2), height=round(button_height/2), bd=3, relief="solid")
+
 #Game Functions
 def GK_game():
     menu_frame.destroy()
@@ -217,16 +260,18 @@ def GK_game():
                     correct = False
             if correct:
                 error_mes.destroy()
-                error_mes = Label(GK_frame, text="Correct!  +1 point", font=("Arial", 16, "bold"), fg="green")
+                error_mes = Label(GK_frame, text="Correct!  +1 point", font=("Arial", 16, "bold"))
                 error_mes.grid(row=4, column=0, columnspan=3)
+                error_mes.config(bg=colours["white"], fg=colours["blue"])
                 answer_entry.delete(0, END)
                 GK_score += 1
                 if i < 9:
                     GK_frame.after(1000, lambda: error_mes.config(text=""))
             else:
                 error_mes.destroy()
-                error_mes = Label(GK_frame, text="Incorrect!", font=("Arial", 16, "bold"), fg="red")
+                error_mes = Label(GK_frame, text="Incorrect!", font=("Arial", 16, "bold"))
                 error_mes.grid(row=4, column=0, columnspan=3)
+                error_mes.config(bg=colours["white"], fg=colours["red"])
                 answer_entry.delete(0, END)
                 if i < 9:
                     GK_frame.after(1000, lambda: error_mes.config(text=""))
@@ -241,6 +286,7 @@ def GK_game():
                 error_mes = Label(GK_frame, text="Quiz Over! You have completed all the questions."
                                   , font=("Arial", 18))
                 error_mes.grid(row=4, column=0, columnspan=3)
+                error_mes.config(bg=colours["white"], fg="black")
                 question_num.destroy()
                 question.destroy()
                 answer_label.destroy()
@@ -249,43 +295,49 @@ def GK_game():
                 score_label = Label(GK_frame, text="Your final score is: {}/10".format(GK_score)
                                     , font=("Arial", 16, "bold"))
                 score_label.grid(row=5, column=0, columnspan=3, pady=20)
+                score_label.config(bg=colours["white"], fg="black")
                 if GK_score == 10:
                     result_label = Label(GK_frame, text="Perfect Score! Well done!"
-                                         , font=("Arial", 16, "bold"), fg="green")
+                                         , font=("Arial", 16, "bold"))
                     result_label.grid(row=6, column=0, columnspan=3)
+                    result_label.config(bg=colours["white"], fg=colours["blue"])
                 elif GK_score >= 7:
                     result_label = Label(GK_frame, text="Great Job!"
                                          , font=("Arial", 16, "bold"))
                     result_label.grid(row=6, column=0, columnspan=3)
+                    result_label.config(bg=colours["white"], fg=colours["dblue"])
                 elif GK_score >= 4:
                     result_label = Label(GK_frame, text="Not bad, but you can do better!"
                                          , font=("Arial", 16, "bold"))
                     result_label.grid(row=6, column=0, columnspan=3)
+                    result_label.config(bg=colours["white"], fg="black")
         else:
             error_mes.destroy()
             error_mes = Label(GK_frame, text="Please enter an answer before submitting."
-                              , font=("Arial", 12), fg="red")
+                              , font=("Arial", 12))
             error_mes.grid(row=4, column=0, columnspan=3)
+            error_mes.config(bg=colours["white"], fg=colours["red"])
 
     global i, GK_score
     GK_score = 0
     i = 0
     chosen_question = questions[i]
     question_num = Label(GK_frame, text="Question {}:".format(str(i+1)), font=("Arial", 16))
-    question = Label(GK_frame, text=chosen_question, font=("Arial", 20))
-    answer_label = Label(GK_frame, text="Your Answer:", font=("Arial", 12))
+    question = Label(GK_frame, text=chosen_question, font=("Arial", 20, "bold"))
+    answer_label = Label(GK_frame, text="Your Answer:", font=("Arial", 12, "bold"))
     global answer_entry
     answer_entry = Entry(GK_frame, font=("Arial", 16))
-    answer_button = Button(GK_frame, text="Submit", font=("Arial", 12), command=GK_submit)
-    error_mes = Label(GK_frame, text="", font=("Arial", 12), fg="red")
+    answer_button = Label(GK_frame, text="Submit", font=("Arial", 12, "bold"), bd=2, relief="solid")
+    answer_button.bind('<Button-1>', lambda e: GK_submit())
+    error_mes = Label(GK_frame, text="", font=("Arial", 12))
 
     def on_enter_key(event):
         GK_submit()
-
     answer_entry.bind('<Return>', on_enter_key)
 
     global menu_exit
-    menu_exit.config(text="Exit to Menu", command=exit_to_menu)
+    menu_exit.config(text="Exit to Menu")
+    menu_exit.bind('<Button-1>', lambda event: exit_to_menu())
 
     #Layout
     GK_label.grid(row=0, column=0, columnspan=3, sticky=W+E, pady=50)
@@ -295,6 +347,20 @@ def GK_game():
     answer_entry.grid(row=3, column=1, padx=10, sticky=W+E)
     answer_button.grid(row=3, column=2, sticky=W)
     error_mes.grid(row=4, column=0, columnspan=3)
+
+    #Colour config
+    global colours
+
+    GK_frame.config(bg=colours["white"])
+    GK_label.config(bg=colours["white"], fg="black")
+    question_num.config(bg=colours["white"], fg=colours["dblue"])
+    question.config(bg=colours["white"], fg="black", wraplength=800)
+    answer_label.config(bg=colours["white"], fg="black")
+    answer_entry.config(bg=colours["yellow"], fg="black", bd=3, relief="solid", 
+                        highlightthickness=0, insertbackground="black")
+    answer_button.config(bg=colours['blue'], fg='white', width=round(button_width/2), 
+                         height=round(1.5), bd=3, relief="solid")
+    error_mes.config(bg=colours["white"])
 
 def W_Game():
     menu_frame.destroy()
@@ -308,7 +374,7 @@ def W_Game():
     num = 0
     chosen_game = "Wordle"
     w_frame = Frame(m)
-    w_frame.pack(pady=35)
+    w_frame.pack(pady=(40,0))
     
     w_label = Label(w_frame, text="Wordle", font=("Arial", 30, "bold"))
     w_desc = Label(w_frame, text="Guess the 5-letter word:", font=("Arial", 16))
@@ -609,9 +675,9 @@ def open_menu():
     tutorial_menu()
         
     frame.destroy()
-    global menu_frame, Game1, Game2, Game3, player_name
+    global menu_frame, Game1, Game2, Game3, player_name, colours
     menu_frame = Frame(m)
-    menu_frame.pack(pady=20)
+    menu_frame.pack(pady=(50,0))
 
     global width, height
     m.geometry("{}x{}".format(width, height))
@@ -626,15 +692,20 @@ def open_menu():
     else:
         text = "Welcome, {}!".format(player_name)
     welcome_label = Label(menu_frame, text=text, font=("Arial", 18))
-    label = Label(menu_frame, text="Caio's Cool Collections", font=("Arial", 35))
+    label = Label(menu_frame, text="Caio's Cool Collections", font=("Arial", 35, "bold"))
 
     #Menu Buttons
-    menu_button1 = Button(menu_frame, text=Game1, width=button_width, height=button_height, command=GK_game)
-    menu_button2 = Button(menu_frame, text=Game2, width=button_width, height=button_height, command=W_Game)
-    menu_button3 = Button(menu_frame, text=Game3, width=button_width, height=button_height, command=HM_Game)
-    scores_button = Button(menu_frame, text="Scores", width=button_width, height=round(button_height/1.5), command=Scores)
+    menu_button1 = Label(menu_frame, text=Game1, font=("Arial", 12, "bold"))
+    menu_button1.bind('<Button-1>', lambda e: GK_game())
+    menu_button2 = Label(menu_frame, text=Game2, font=("Arial", 12, "bold"))
+    menu_button2.bind('<Button-1>', lambda e: W_Game())
+    menu_button3 = Label(menu_frame, text=Game3, font=("Arial", 12, "bold"))
+    menu_button3.bind('<Button-1>', lambda e: HM_Game())
+    scores_button = Label(menu_frame, text="View Scores", font=("Arial", 12, "bold"))
+    scores_button.bind('<Button-1>', lambda e: Scores())
     global menu_exit
-    menu_exit = Button(m, text="Exit Program", command=m.quit, width=button_width, height=round(button_height/2))
+    menu_exit = Label(m, text="Exit", font=("Arial", 12, "bold"))
+    menu_exit.bind('<Button-1>', lambda e: m.quit())
 
     #program layout
     welcome_label.grid(row=0, column=0, columnspan=3, sticky=W+E)
@@ -644,6 +715,21 @@ def open_menu():
     menu_button3.grid(row=2, column=2)
     scores_button.grid(row=3, column=0, columnspan=3, pady=30, sticky=W+E)
     menu_exit.pack(fill=Y, side=BOTTOM, pady=20, padx=button_width*5)
+
+    #Colour config
+    menu_frame.config(bg=colours["white"])
+    welcome_label.config(bg=colours["white"], fg=colours["blue"])
+    label.config(bg=colours["white"], fg="black")
+    menu_button1.config(bg=colours['yellow'], fg='black',
+                        width=button_width, height=button_height, bd=3, relief="solid")
+    menu_button2.config(bg=colours['yellow'], fg='black',
+                        width=button_width, height=button_height, bd=3, relief="solid")
+    menu_button3.config(bg=colours['yellow'], fg='black',
+                        width=button_width, height=button_height, bd=3, relief="solid")
+    scores_button.config(bg=colours['blue'], fg='white',
+                         width=round(button_width*1.5), height=round(button_height/1.5), bd=3, relief="solid")
+    menu_exit.config(bg=colours['red'], fg='white',
+                     width=round(button_width*1.5), height=round(button_height/2), bd=3, relief="solid")
 
 
 #Menu function
@@ -667,8 +753,7 @@ title.pack(pady=20)
 subtext.pack(pady=20)
 global name_entry
 name_entry = Entry(frame, font=("Arial", 16))
-enter_label = Label(frame, text="Enter", bg=colours['blue'], fg='white',
-                    font=("Arial", 12, "bold"), width=8, height=2, bd=2, relief='flat')
+enter_label = Label(frame, text="Enter", font=("Arial", 12, "bold"))
 enter_label.bind('<Button-1>', lambda e: menu())
 error_mes = Label(frame, text="", font=("Arial", 12), fg=colours["red"])
 error_mes.pack(pady=20)
@@ -679,7 +764,10 @@ enter_label.pack(pady=20)
 title.config(bg=colours["white"], fg="black")
 subtext.config(bg=colours["white"], fg=colours["blue"])
 name_entry.config(bg=colours["yellow"], fg="black",
-                border=2, insertbackground="black")
+                bd=3, insertbackground="black", relief="solid",
+                highlightthickness=0)
+enter_label.config(bg=colours['blue'], fg='white',
+                    width=8, height=2, bd=3, relief="solid")
 error_mes.config(bg=colours["white"])
 
 def on_enter_key(event):
