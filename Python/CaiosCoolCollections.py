@@ -959,6 +959,7 @@ def open_menu():
     tutorial_menu()
     frame.destroy()
     global menu_frame, Game1, Game2, Game3, player_name, colours
+    global GK_played, w_played, hm_played
     menu_frame = Frame(m)
     menu_frame.pack(pady=(50, 0))
 
@@ -995,23 +996,36 @@ def open_menu():
     # program layout
     welcome_label.grid(row=0, column=0, columnspan=3, sticky=W+E)
     label.grid(row=1, column=0, columnspan=3, sticky=W+E, pady=20)
-    menu_button1.grid(row=2, column=0, pady=30)
-    menu_button2.grid(row=2, column=1, padx=40)
-    menu_button3.grid(row=2, column=2)
-    scores_button.grid(row=3, column=0, columnspan=3, pady=30, sticky=W+E)
+    menu_button1.grid(row=2, column=0, pady=(60, 40))
+    menu_button2.grid(row=2, column=1, padx=40, pady=(60, 40))
+    menu_button3.grid(row=2, column=2, pady=(60, 40))
+    scores_button.grid(row=3, column=0, columnspan=3, sticky=W+E)
     menu_exit.pack(fill=Y, side=BOTTOM, pady=20, padx=button_width*5)
+
+    if GK_played is False:
+        gk_comp_col = "yellow"
+    else:
+        gk_comp_col = "grey"
+    if w_played is False:
+        w_comp_col = "yellow"
+    else:
+        w_comp_col = "grey"
+    if hm_played is False:
+        hm_comp_col = "yellow"
+    else:
+        hm_comp_col = "grey"
 
     # Colour config
     menu_frame.config(bg=colours["white"])
     welcome_label.config(bg=colours["white"], fg=colours["blue"])
     label.config(bg=colours["white"], fg="black")
-    menu_button1.config(bg=colours['yellow'], fg='black',
+    menu_button1.config(bg=colours[gk_comp_col], fg='black',
                         width=button_width, height=button_height, bd=3,
                         relief="solid")
-    menu_button2.config(bg=colours['yellow'], fg='black',
+    menu_button2.config(bg=colours[w_comp_col], fg='black',
                         width=button_width, height=button_height, bd=3,
                         relief="solid")
-    menu_button3.config(bg=colours['yellow'], fg='black',
+    menu_button3.config(bg=colours[hm_comp_col], fg='black',
                         width=button_width, height=button_height, bd=3,
                         relief="solid")
     scores_button.config(bg=colours['blue'], fg='white',
